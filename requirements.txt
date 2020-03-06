@@ -29,3 +29,12 @@ setuptools==40.8.0
 six==1.14.0
 soupsieve==2.0
 urllib3==1.25.8
+
+dask==2.1.0
+decorator==4.4.0
+gunicorn==19.9.0
+html5lib==1.0.1
+ipython-genutils==0.2.0
+jupyter-core==4.5.0
+nbformat==4.4.0
+traitlets==4.3.2
