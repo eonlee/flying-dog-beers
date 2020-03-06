@@ -359,18 +359,11 @@ def update_output2(value):
     Output('my-figure2', 'figure'),
     [Input('demo-dropdown', 'value')])
 def update_output3(value):
-    df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
-
-    fig = go.Figure(data=[go.Candlestick(x=df['Date'],
-                    open=df['AAPL.Open'], high=df['AAPL.High'],
-                    low=df['AAPL.Low'], close=df['AAPL.Close'])
-                         ])
-
-    fig.update_layout(xaxis_rangeslider_visible=False)
+    a= 'hello World'
 
     
 
-    return fig
+    return a
 
 
 # 제무재표 표
