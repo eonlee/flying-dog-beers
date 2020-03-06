@@ -1,6 +1,6 @@
 import dash
-import dash_html_components as html
 import dash_core_components as dcc
+import dash_html_components as htm
 from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
 import requests
@@ -9,10 +9,12 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
+
+########### Define your variables
 def get_codedf():
     url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
     code_df = pd.read_html(url_main, header=0)[0]
-    # code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
+    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
     code_df = code_df[['회사명', '종목코드']]
     code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
     return code_df
@@ -24,8 +26,6 @@ def get_codeandname():
     # code_name = [i + " " + "(" + j + ")" for i, j in zip(stock_name, stock_code)]
     return stock_name
 
-
-app = dash.Dash()
 dfcode = get_codeandname()
 
 
@@ -41,6 +41,13 @@ def get_charturl(item_name, code_df):
     return url_sub
 
 
+########### Initiate the app
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
+app.title=tabtitle
+
+########### Set up the layout
 app.layout = html.Div(
     html.Div([
         html.Div([
@@ -114,12 +121,12 @@ def update_output2(value):
     # Importing Code from KRX
     url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
     code_df = pd.read_html(url_main, header=0)[0]
-    # code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
+    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
     code_df = code_df[['회사명', '종목코드']]
     code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
 
     # Using Item name and code to get the right URL
-    item_name = '삼성전자'
+    item_name = value
     financecode_url = get_financeurl(item_name, code_df)
 
     main_url = financecode_url
@@ -349,7 +356,7 @@ def update_output3(value):
     # Importing Code from KRX
     url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
     code_df = pd.read_html(url_main, header=0)[0]
-    # code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
+    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
     code_df = code_df[['회사명', '종목코드']]
     code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
 
@@ -464,7 +471,7 @@ def update_output(value):
     # Importing Code from KRX
     url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
     code_df = pd.read_html(url_main, header=0)[0]
-    # code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
+    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
     code_df = code_df[['회사명', '종목코드']]
     code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
 
@@ -564,7 +571,6 @@ def update_output(value):
             )
         ])
     return fig
-
 
 if __name__ == '__main__':
     app.run_server()
