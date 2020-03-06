@@ -409,8 +409,7 @@ def update_output3(value):
     df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3).dropna()
 
     # Make Chart out of data
-    fig = make_subplots(rows=5, cols=1, shared_xaxes=True, row_width=[0.2, 0.2, 0.2, 0.2, 0.4],
-                        subplot_titles=("캔들차트", "", "거래량", "주가의 힘", "세력의 힘"))
+    fig = make_subplots(rows=1, cols=1, shared_xaxes=True)
 
     fig.add_trace(go.Candlestick(x=df.date,
                                  open=df.open,
@@ -420,49 +419,7 @@ def update_output3(value):
                                  increasing_line_color='red', decreasing_line_color='blue', showlegend=False),
                   row=1, col=1)
 
-    fig.add_trace(go.Bar(
-        x=df.date,
-        y=df['volume'],
-        name="거래량"),
-        row=3, col=1)
-
-    fig.add_trace(go.Scatter(
-        x=df.date,
-        y=df['kdj_k'],
-        fillcolor='red',
-        stackgroup='one',
-        line_color='black',
-        legendgroup="group3",
-        name="주가 강도 여부"),
-        row=4, col=1)
-
-    fig.add_trace(go.Scatter(
-        x=df.date,
-        y=df['kdj_d'],
-        stackgroup='two',
-        fillcolor='grey',
-        line_color='black',
-        showlegend=False),
-        row=4, col=1)
-
-    fig.add_trace(go.Scatter(
-        x=df.date,
-        y=df['eom_2'],
-        name="세력 진입 여부",
-        fillcolor='orange',
-        stackgroup='one',
-        line_color='yellow'),
-        row=5, col=1)
-
-    fig.add_trace(go.Scatter(
-        x=df.date,
-        y=df['eom_3'],
-        name="Eom_3",
-        stackgroup='two',
-        fillcolor='grey',
-        line_color='black',
-        showlegend=False),
-        row=5, col=1)
+    
 
     fig.update_layout(title_text="차트 분석", height=800)
     return fig
