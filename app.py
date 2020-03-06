@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 
 
+
 ########### Define your variables
 
 def get_codedf():
@@ -358,70 +359,17 @@ def update_output2(value):
     Output('my-figure2', 'figure'),
     [Input('demo-dropdown', 'value')])
 def update_output3(value):
-    # Importing Code from KRX
-    url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
-    code_df = pd.read_html(url_main, header=0)[0]
-    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
-    code_df = code_df[['회사명', '종목코드']]
-    code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
+    df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
 
-    # Using Item name and code to get the right URL
-    item_name = value
-    url = get_charturl(item_name, code_df)
+    fig = go.Figure(data=[go.Candlestick(x=df['Date'],
+                    open=df['AAPL.Open'], high=df['AAPL.High'],
+                    low=df['AAPL.Low'], close=df['AAPL.Close'])
+                         ])
 
-    # Add data into df
-    df = pd.DataFrame()
-
-    for page in range(1, 25):
-        pg_url = '{url}&page={page}'.format(url=url, page=page)
-        df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
-
-    df = df.dropna()
-
-    # Rename df
-    df = df.rename(columns={'날짜': 'date', '종가': 'close', '전일비': 'diff',
-                            '시가': 'open', '고가': 'high', '저가': 'low', '거래량': 'volume'})
-    df[['close', 'diff', 'open', 'high', 'low', 'volume']] \
-        = df[['close', 'diff', 'open', 'high', 'low', 'volume']].astype(int)
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.sort_values(by=['date'], ascending=True)
-
-    # 입력받은 값이 dataframe이라는 것을 정의해줌
-    df = pd.DataFrame(df)
-
-    # n일중 종가 중 최고가
-    ndays_high = df.close.rolling(window=15, min_periods=1).max()
-    # n일중 종가 중 최저가
-    ndays_low = df.close.rolling(window=15, min_periods=1).min()
-    # Fast%K 계산
-    kdj_k = ((df.close - ndays_low) / (ndays_high - ndays_low)) * 100
-    # Fast%D (=Slow%K) 계산
-    kdj_d = kdj_k.ewm(span=8).mean()
-    # EOM 계산
-    eom_1 = ((((df.high + df.low) / 2) - ((df.high.shift(1) + df.low.shift(1)) / 2)) / (
-            df.volume / (df.high - df.low)))
-    # Eom AVG
-    eom_2 = eom_1.rolling(60).mean()
-    # Eom AVG's Avg
-    eom_3 = eom_2.rolling(10).mean()
-
-    # dataframe에 컬럼 추가
-    df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3).dropna()
-
-    # Make Chart out of data
-    fig = make_subplots(rows=1, cols=1, shared_xaxes=True)
-
-    fig.add_trace(go.Candlestick(x=df.date,
-                                 open=df.open,
-                                 high=df.high,
-                                 low=df.low,
-                                 close=df.close,
-                                 increasing_line_color='red', decreasing_line_color='blue', showlegend=False),
-                  row=1, col=1)
+    fig.update_layout(xaxis_rangeslider_visible=False)
 
     
 
-    fig.update_layout(title_text="차트 분석", height=800)
     return fig
 
 
