@@ -29,16 +29,8 @@ def get_codeandname():
     return stock_name
 
 
-
-
-
-
-########### Initiate the app
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-server = app.server
-app.title = 'Hellooo'
-
+app = dash.Dash()
+dfcode = get_codeandname()
 
 
 def get_financeurl(item_name, code_df):
@@ -53,8 +45,6 @@ def get_charturl(item_name, code_df):
     return url_sub
 
 
-########### Set up the layout
-
 app.layout = html.Div(
     html.Div([
         html.Div([
@@ -66,7 +56,7 @@ app.layout = html.Div(
                     id='demo-dropdown',
                     value='세중',
                     options=[
-                        {'label': i, 'value': i} for i in get_codeandname()
+                        {'label': i, 'value': i} for i in dfcode
                     ],
                     placeholder="Select a city"
                 ),
@@ -97,7 +87,7 @@ app.layout = html.Div(
             # className="five columns"),
 
             html.Div([
-                dcc.Graph(
+                html.H1(
                     id="my-figure2",
                     className="pretty_container twelve columns")
             ])
@@ -118,6 +108,7 @@ app.layout = html.Div(
         ], className="row")
     ])
 )
+
 
 # 제무재표 차트
 @app.callback(
@@ -356,14 +347,37 @@ def update_output2(value):
 
 # 캔들차트 외
 @app.callback(
-    Output('my-figure2', 'figure'),
+    Output('my-figure2', 'children'),
     [Input('demo-dropdown', 'value')])
 def update_output3(value):
-    a= 'hello World'
+    # Importing Code from KRX
+    url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
+    code_df = pd.read_html(url_main, header=0)[0]
+    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
+    code_df = code_df[['회사명', '종목코드']]
+    code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
 
-    
+    # Using Item name and code to get the right URL
+    item_name = value
+    url = get_charturl(item_name, code_df)
 
-    return a
+    # Add data into df
+    df = pd.DataFrame()
+
+    for page in range(1, 25):
+        pg_url = '{url}&page={page}'.format(url=url, page=page)
+        df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
+
+    df = df.dropna()
+
+    # Rename df
+    df = df.rename(columns={'날짜': 'date', '종가': 'close', '전일비': 'diff',
+                            '시가': 'open', '고가': 'high', '저가': 'low', '거래량': 'volume'})
+    df[['close', 'diff', 'open', 'high', 'low', 'volume']] \
+        = df[['close', 'diff', 'open', 'high', 'low', 'volume']].astype(int)
+    df['date'] = pd.to_datetime(df['date'])
+    df = df.sort_values(by=['date'], ascending=True)
+    return df['high']
 
 
 # 제무재표 표
@@ -474,7 +488,6 @@ def update_output(value):
             )
         ])
     return fig
-
 
 if __name__ == '__main__':
     app.run_server()
