@@ -87,7 +87,7 @@ app.layout = html.Div(
             # className="five columns"),
 
             html.Div([
-                html.H1(
+                dcc.Graph(
                     id="my-figure2",
                     className="pretty_container twelve columns")
             ])
@@ -347,7 +347,7 @@ def update_output2(value):
 
 # 캔들차트 외
 @app.callback(
-    Output('my-figure2', 'children'),
+    Output('my-figure2', 'figure'),
     [Input('demo-dropdown', 'value')])
 def update_output3(value):
     # Importing Code from KRX
@@ -377,7 +377,87 @@ def update_output3(value):
         = df[['close', 'diff', 'open', 'high', 'low', 'volume']].astype(int)
     df['date'] = pd.to_datetime(df['date'])
     df = df.sort_values(by=['date'], ascending=True)
-    return df['high']
+
+    # 입력받은 값이 dataframe이라는 것을 정의해줌
+    df = pd.DataFrame(df)
+
+    # n일중 종가 중 최고가
+    ndays_high = df.close.rolling(window=15, min_periods=1).max()
+    # n일중 종가 중 최저가
+    ndays_low = df.close.rolling(window=15, min_periods=1).min()
+    # Fast%K 계산
+    kdj_k = ((df.close - ndays_low) / (ndays_high - ndays_low)) * 100
+    # Fast%D (=Slow%K) 계산
+    kdj_d = kdj_k.ewm(span=8).mean()
+    # EOM 계산
+    eom_1 = ((((df.high + df.low) / 2) - ((df.high.shift(1) + df.low.shift(1)) / 2)) / (
+            df.volume / (df.high - df.low)))
+    # Eom AVG
+    eom_2 = eom_1.rolling(60).mean()
+    # Eom AVG's Avg
+    eom_3 = eom_2.rolling(10).mean()
+
+    # dataframe에 컬럼 추가
+    df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3).dropna()
+
+    # Make Chart out of data
+    fig = make_subplots(rows=5, cols=1, shared_xaxes=True, row_width=[0.2, 0.2, 0.2, 0.2, 0.4],
+                        subplot_titles=("캔들차트", "", "거래량", "주가의 힘", "세력의 힘"))
+
+    fig.add_trace(go.Candlestick(x=df.date,
+                                 open=df.open,
+                                 high=df.high,
+                                 low=df.low,
+                                 close=df.close,
+                                 increasing_line_color='red', decreasing_line_color='blue', showlegend=False),
+                  row=1, col=1)
+
+    fig.add_trace(go.Bar(
+        x=df.date,
+        y=df['volume'],
+        name="거래량"),
+        row=3, col=1)
+
+    fig.add_trace(go.Scatter(
+        x=df.date,
+        y=df['kdj_k'],
+        fillcolor='red',
+        stackgroup='one',
+        line_color='black',
+        legendgroup="group3",
+        name="주가 강도 여부"),
+        row=4, col=1)
+
+    fig.add_trace(go.Scatter(
+        x=df.date,
+        y=df['kdj_d'],
+        stackgroup='two',
+        fillcolor='grey',
+        line_color='black',
+        showlegend=False),
+        row=4, col=1)
+
+    fig.add_trace(go.Scatter(
+        x=df.date,
+        y=df['eom_2'],
+        name="세력 진입 여부",
+        fillcolor='orange',
+        stackgroup='one',
+        line_color='yellow'),
+        row=5, col=1)
+
+    fig.add_trace(go.Scatter(
+        x=df.date,
+        y=df['eom_3'],
+        name="Eom_3",
+        stackgroup='two',
+        fillcolor='grey',
+        line_color='black',
+        showlegend=False),
+        row=5, col=1)
+
+    fig.update_layout(title_text="차트 분석", height=800)
+    return fig
 
 
 # 제무재표 표
