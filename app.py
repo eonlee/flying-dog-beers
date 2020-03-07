@@ -1,18 +1,16 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.graph_objs as go
-import pandas as pd
 from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
 import requests
 from bs4 import BeautifulSoup
 import numpy as np
-
+import pandas as pd
+import plotly.graph_objects as go
 
 
 ########### Define your variables
-
 def get_codedf():
     url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
     code_df = pd.read_html(url_main, header=0)[0]
@@ -28,8 +26,6 @@ def get_codeandname():
     # code_name = [i + " " + "(" + j + ")" for i, j in zip(stock_name, stock_code)]
     return stock_name
 
-
-app = dash.Dash()
 dfcode = get_codeandname()
 
 
@@ -45,6 +41,13 @@ def get_charturl(item_name, code_df):
     return url_sub
 
 
+########### Initiate the app
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
+app.title=tabtitle
+
+########### Set up the layout
 app.layout = html.Div(
     html.Div([
         html.Div([
