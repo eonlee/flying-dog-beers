@@ -382,16 +382,7 @@ def update_output3(value):
     pg_url13 = '{url}&page={page}'.format(url=url, page=13)
     pg_url14 = '{url}&page={page}'.format(url=url, page=14)
     pg_url15 = '{url}&page={page}'.format(url=url, page=15)
-    pg_url16 = '{url}&page={page}'.format(url=url, page=16)
-    pg_url17 = '{url}&page={page}'.format(url=url, page=17)
-    pg_url18 = '{url}&page={page}'.format(url=url, page=18)
-    pg_url19 = '{url}&page={page}'.format(url=url, page=19)
-    pg_url20 = '{url}&page={page}'.format(url=url, page=20)
-    pg_url21 = '{url}&page={page}'.format(url=url, page=21)
-    pg_url22 = '{url}&page={page}'.format(url=url, page=22)
-    pg_url23 = '{url}&page={page}'.format(url=url, page=23)
-    pg_url24 = '{url}&page={page}'.format(url=url, page=24)
-    pg_url25 = '{url}&page={page}'.format(url=url, page=25)
+
 
     df = df.append(pd.read_html(pg_url1, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url2, header=0)[0], ignore_index=True)
@@ -408,16 +399,7 @@ def update_output3(value):
     df = df.append(pd.read_html(pg_url13, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url14, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url15, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url16, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url17, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url18, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url19, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url20, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url21, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url22, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url23, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url24, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url25, header=0)[0], ignore_index=True)
+
 
     df = df.dropna()
 
@@ -444,9 +426,9 @@ def update_output3(value):
     eom_1 = ((((df.high + df.low) / 2) - ((df.high.shift(1) + df.low.shift(1)) / 2)) / (
             df.volume / (df.high - df.low)))
     # Eom AVG
-    eom_2 = eom_1.rolling(3).mean()
+    eom_2 = eom_1.rolling(60).mean()
     # Eom AVG's Avg
-    eom_3 = eom_2.rolling(2).mean()
+    eom_3 = eom_2.rolling(10).mean()
 
     # dataframe에 컬럼 추가
     df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3).dropna()
