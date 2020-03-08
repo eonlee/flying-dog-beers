@@ -57,7 +57,7 @@ app.layout = html.Div(
             html.Div([
                 dcc.Dropdown(
                     id='demo-dropdown',
-                    value='세중',
+                    value='삼성전자',
                     options=[
                         {'label': i, 'value': i} for i in dfcode
                     ],
@@ -367,7 +367,7 @@ def update_output3(value):
     # Add data into df
     df = pd.DataFrame()
 
-    for page in range(1, 5):
+    for page in range(1, 25):
         pg_url = '{url}&page={page}'.format(url=url, page=page)
         df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
 
