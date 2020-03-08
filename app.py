@@ -396,9 +396,9 @@ def update_output3(value):
     eom_1 = ((((df.high + df.low) / 2) - ((df.high.shift(1) + df.low.shift(1)) / 2)) / (
             df.volume / (df.high - df.low)))
     # Eom AVG
-    eom_2 = eom_1.rolling(60).mean()
+    eom_2 = eom_1.rolling(3).mean()
     # Eom AVG's Avg
-    eom_3 = eom_2.rolling(10).mean()
+    eom_3 = eom_2.rolling(2).mean()
 
     # dataframe에 컬럼 추가
     df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3).dropna()
