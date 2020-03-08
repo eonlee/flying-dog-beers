@@ -366,7 +366,11 @@ def update_output3(value):
 
     # Add data into df
     df = pd.DataFrame()
+
+    for page in range(1, 5):
+    pg_url = '{url}&page={page}'.format(url=url, page=page)
     df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
+    
     df = df.dropna()
 
     # Rename df
