@@ -385,8 +385,7 @@ def update_output3(value):
     pg_url16 = '{url}&page={page}'.format(url=url, page=16)
     pg_url17 = '{url}&page={page}'.format(url=url, page=17)
     pg_url18 = '{url}&page={page}'.format(url=url, page=18)
-    pg_url19 = '{url}&page={page}'.format(url=url, page=19)
-    pg_url20 = '{url}&page={page}'.format(url=url, page=20)
+
 
 
     df = df.append(pd.read_html(pg_url1, header=0)[0], ignore_index=True)
@@ -407,8 +406,7 @@ def update_output3(value):
     df = df.append(pd.read_html(pg_url16, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url17, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url18, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url19, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url20, header=0)[0], ignore_index=True)
+
 
 
     df = df.dropna()
