@@ -388,9 +388,27 @@ def update_output3(value):
     # Add data into df
     df = pd.DataFrame()
 
-    for page in range(1, 15):
-        pg_url = '{url}&page={page}'.format(url=url, page=page)
-        df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
+    pg_url1 = '{url}&page={page}'.format(url=url, page=1)
+    pg_url2 = '{url}&page={page}'.format(url=url, page=2)
+    pg_url3 = '{url}&page={page}'.format(url=url, page=3)
+    pg_url4 = '{url}&page={page}'.format(url=url, page=4)
+    pg_url5 = '{url}&page={page}'.format(url=url, page=5)
+    pg_url6 = '{url}&page={page}'.format(url=url, page=6)
+    pg_url7 = '{url}&page={page}'.format(url=url, page=7)
+    pg_url8 = '{url}&page={page}'.format(url=url, page=8)
+    pg_url9 = '{url}&page={page}'.format(url=url, page=9)
+    pg_url10 = '{url}&page={page}'.format(url=url, page=10)
+
+    df = df.append(pd.read_html(pg_url1, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url2, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url3, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url4, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url5, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url6, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url7, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url8, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url9, header=0)[0], ignore_index=True)
+    df = df.append(pd.read_html(pg_url10, header=0)[0], ignore_index=True)
 
     df = df.dropna()
 
