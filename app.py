@@ -44,10 +44,10 @@ def get_charturl(item_name, code_df):
 
 
 ########### Initiate the app
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
-app.title = 'tabtitle'
+app.title = '블랙다이아몬드 보조지표'
+
 
 ########### Set up the layout
 app.layout = dbc.Row(
