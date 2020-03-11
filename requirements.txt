@@ -39,4 +39,4 @@ jupyter-core==4.5.0
 nbformat==4.4.0
 traitlets==4.3.2
 
-dash-boothstrap-components==0.8.3
+dash-bootstrap-components==0.8.3
