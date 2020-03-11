@@ -441,7 +441,7 @@ def update_output3(value):
     eom_3 = eom_2.rolling(10).mean()
 
     # dataframe에 컬럼 추가
-    df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3).dropna()
+    df = df.assign(kdj_k=kdj_k, kdj_d=kdj_d, eom_1=eom_1, eom_2=eom_2, eom_3=eom_3)
 
     # Make Chart out of data
     fig = make_subplots(rows=5, cols=1, shared_xaxes=True, row_width=[0.2, 0.2, 0.2, 0.2, 0.4],
