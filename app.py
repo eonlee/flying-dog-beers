@@ -61,7 +61,7 @@ app.layout = dbc.Row(
                 ),
 
                 dbc.Row(
-                    dbc.Col(html.H6(children='주가의 힘과 세력의 힘을 주는 지표',
+                    dbc.Col(html.H6(children='주가와 세력의 힘을 알려주는 지표',
                                     style={'margin-top': '2%'}),
                             )
                 ),
@@ -152,8 +152,8 @@ def update_output2(value):
 
     main_url = financecode_url
     finance_url = requests.get(main_url)
-    html = finance_url.text
-    soup = BeautifulSoup(html, 'html.parser')
+    html2 = finance_url.text
+    soup = BeautifulSoup(html2, 'html.parser')
     finance_html = soup.select('div.section.cop_analysis div.sub_section')[0]
 
     # Selecting Appropriate Data and designating it
@@ -396,8 +396,6 @@ def update_output3(value):
     pg_url6 = '{url}&page={page}'.format(url=url, page=6)
     pg_url7 = '{url}&page={page}'.format(url=url, page=7)
     pg_url8 = '{url}&page={page}'.format(url=url, page=8)
-    pg_url9 = '{url}&page={page}'.format(url=url, page=9)
-    pg_url10 = '{url}&page={page}'.format(url=url, page=10)
 
     df = df.append(pd.read_html(pg_url1, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url2, header=0)[0], ignore_index=True)
@@ -407,8 +405,7 @@ def update_output3(value):
     df = df.append(pd.read_html(pg_url6, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url7, header=0)[0], ignore_index=True)
     df = df.append(pd.read_html(pg_url8, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url9, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url10, header=0)[0], ignore_index=True)
+
 
     df = df.dropna()
 
@@ -581,7 +578,7 @@ def update_output(value):
                    font=dict(color='white', size=12),
                    )))
 
-    fig.update_layout(title_text=item_name + '연간 제무재표')
+    fig.update_layout(title_text=item_name + ' ' + '연간 제무재표')
 
     fig.update_layout(
         updatemenus=[
