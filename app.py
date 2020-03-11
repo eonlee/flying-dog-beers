@@ -61,7 +61,7 @@ app.layout = dbc.Row(
                 ),
 
                 dbc.Row(
-                    dbc.Col(html.H6(children='주가의 힘과 세력의 힘을 확인 후 투자 여부 결정해 주는 지표',
+                    dbc.Col(html.H6(children='주가의 힘과 세력의 힘을 주는 지표',
                                     style={'margin-top': '2%'}),
                             )
                 ),
