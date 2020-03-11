@@ -1,41 +1,13 @@
-/* Table of contents
-––––––––––––––––––––––––––––––––––––––––––––––––
-- Plotly.js
-- Grid
-- Base Styles
-- Typography
-- Links
-- Buttons
-- Forms
-- Lists
-- Code
-- Tables
-- Spacing
-- Utilities
-- Clearing
-- Media Queries
+.pretty_container {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
 
-*/
 
-/* PLotly.js 
-–––––––––––––––––––––––––––––––––––––––––––––––– */
-/* plotly.js's modebar's z-index is 1001 by default
- * https://github.com/plotly/plotly.js/blob/7e4d8ab164258f6bd48be56589dacd9bdd7fded2/src/css/_modebar.scss#L5
- * In case a dropdown is above the graph, the dropdown's options
- * will be rendered below the modebar
- * Increase the select option's z-index
- 
- */
-
-/* This was actually not quite right -
-   dropdowns were overlapping each other (edited October 26)
-
-.Select {
-    z-index: 1002;
-}*/
-
-/* Grid
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
 .container {
   position: relative;
   width: 100%;
@@ -86,7 +58,7 @@
     width: 39.3333333333%;
   }
   .six.columns {
-    width: 48%;
+    width: 39%;
   }
   .seven.columns {
     width: 56.6666666667%;
@@ -104,7 +76,7 @@
     width: 91.3333333333%;
   }
   .twelve.columns {
-    width: 100%;
+    width: 90%;
     margin-left: 0;
   }
 
@@ -210,6 +182,7 @@ h6 {
   font-weight: 300;
 }
 h1 {
+
   font-size: 4.5rem;
   line-height: 1.2;
   letter-spacing: -0.1rem;
@@ -548,7 +521,7 @@ there.
     width: calc(100% * 5 / 12);
   }
   .six.columns {
-    width: 49.75%;
+    width: 44.5%;
   }
   .seven.columns {
     width: calc(100% * 7 / 12);
