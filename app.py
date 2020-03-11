@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
 
 
 ########### Define your variables
@@ -25,6 +26,7 @@ def get_codeandname():
     # stock_code = get_codedf().code
     # code_name = [i + " " + "(" + j + ")" for i, j in zip(stock_name, stock_code)]
     return stock_name
+
 
 dfcode = get_codeandname()
 
@@ -48,68 +50,87 @@ server = app.server
 app.title = 'tabtitle'
 
 ########### Set up the layout
-app.layout = html.Div(
-    html.Div([
-        html.Div([
-            html.H1(children='종목정보',
-                    className="three columns"),
-
-            html.Div([
-                dcc.Dropdown(
-                    id='demo-dropdown',
-                    value='삼성전자',
-                    options=[
-                        {'label': i, 'value': i} for i in dfcode
-                    ],
-                    placeholder="Select a city"
+app.layout = dbc.Row(
+    dbc.Col([
+        dbc.Row([
+            dbc.Col([
+                dbc.Row(
+                    dbc.Col(html.H1(children='블랙다이아몬드 보조지표',
+                                    style={'margin-top': '5%'}),
+                            )
                 ),
-            ], className="five columns"),
 
-            html.Img(
+                dbc.Row(
+                    dbc.Col(html.H6(children='주가의 힘과 세력의 힘을 확인 후 투자 여부 결정해 주는 지표',
+                                    style={'margin-top': '2%'}),
+                            )
+                ),
+
+                dbc.Row(
+                    dbc.Col(
+                        dcc.Dropdown(
+                            id='demo-dropdown',
+                            value='세중',
+                            options=[
+                                {'label': i, 'value': i} for i in dfcode
+                            ],
+                            placeholder="종목을 고르세요",
+                        ),
+                        style={
+                            'margin-top': '2%'},
+                        width=4
+                    )
+                )
+            ],
+                width=9
+            ),
+            dbc.Col(html.Img(
                 src=app.get_asset_url("blackdiamond.png"),
-                className='four columns',
                 style={
-                    'height': '14%',
-                    'width': '14%',
+                    'height': '100%',
+                    'width': '100%',
                     'float': 'right',
                     'position': 'relative',
-                    'margin-top': 20,
-                    'margin-right': 20
+                    'margin-top': 10,
+                    'margin-right': 10
                 },
             ),
-            html.Div(children='''
-                        Dash: A web application framework for Python.
-                        ''',
-                     className='nine columns',
-                     style={'margin-top': '10'}
-                     )
-        ], className="row"),
+                width=3
+            )
+        ],
+            align='center'
+        ),
 
-        html.Div([
-            # html.H1(children='종목정보2',
-            # className="five columns"),
+        dbc.Row([
+            dbc.Col(
+                html.Div([
+                    dcc.Graph(
+                        id="my-figure2",
+                        className="pretty_container")
+                ]),
+                width=12
+            )
+        ], justify='center'),
 
-            html.Div([
-                dcc.Graph(
-                    id="my-figure2",
-                    className="pretty_container twelve columns")
-            ])
-        ], className="row"),
-
-        html.Div([
-            html.Div([
+        dbc.Row([
+            dbc.Col(
                 dcc.Graph(
                     id="my-figure3",
-                    className="pretty_container five columns")
-            ]),
+                    className="pretty_container"),
+                width=6
+            ),
 
-            html.Div([
+            dbc.Col(
                 dcc.Graph(
                     id="my-figure",
-                    className="pretty_container six columns")
-            ])
-        ], className="row")
-    ])
+                    className="pretty_container"),
+                width=6
+
+            )
+        ], justify='center'
+        )
+    ], width=10),
+    justify='center'
 )
 
 
@@ -182,7 +203,7 @@ def update_output2(value):
 
     # Drawing Chart
     fig = make_subplots(2, 3, subplot_titles=(
-    "매출액 (억원)", "영업이익+당기순이익 (억원)", "영업이익률+순이익률 (%)", "부채비율 (%)", "유보율 (%)", "ROE (%)"))
+        "매출액 (억원)", "영업이익+당기순이익 (억원)", "영업이익률+순이익률 (%)", "부채비율 (%)", "유보율 (%)", "ROE (%)"))
     # 1 번 차트 (1,1)
     fig.add_scatter(x=z, y=y,
                     mode='lines+markers',
@@ -312,7 +333,7 @@ def update_output2(value):
                     line_color='pink',
                     showlegend=False,
                     visible='legendonly')
-    fig.update_layout(title_text="차트 분석")
+    fig.update_layout(title_text=item_name + ' ' + '연간 제무차트')
     fig.update_layout(
         updatemenus=[
             dict(
@@ -321,7 +342,7 @@ def update_output2(value):
                 active=0,
                 pad={"r": 10, "t": 10},
                 showactive=True,
-                x=0.1,
+                x=0.15,
                 xanchor="left",
                 y=1.3,
                 yanchor="top",
@@ -331,7 +352,7 @@ def update_output2(value):
                          args=[
                              {"visible": [True, False, True, False, True, False, True, False, True, False, True, False,
                                           True, False, True, False]},
-                             {'title': '연간 제무 미니차트'}
+                             {'title': item_name + '연간 제무차트'}
                          ]),
 
                     dict(label="분기",
@@ -339,7 +360,7 @@ def update_output2(value):
                          args=[
                              {"visible": [False, True, False, True, False, True, False, True, False, True, False, True,
                                           False, True, False, True]},
-                             {'title': '분기 제무 미니차트'}
+                             {'title': item_name + '분기 제무차트'}
                          ]),
 
                 ]),
@@ -367,31 +388,9 @@ def update_output3(value):
     # Add data into df
     df = pd.DataFrame()
 
-    pg_url1 = '{url}&page={page}'.format(url=url, page=1)
-    pg_url2 = '{url}&page={page}'.format(url=url, page=2)
-    pg_url3 = '{url}&page={page}'.format(url=url, page=3)
-    pg_url4 = '{url}&page={page}'.format(url=url, page=4)
-    pg_url5 = '{url}&page={page}'.format(url=url, page=5)
-    pg_url6 = '{url}&page={page}'.format(url=url, page=6)
-    pg_url7 = '{url}&page={page}'.format(url=url, page=7)
-    pg_url8 = '{url}&page={page}'.format(url=url, page=8)
-    pg_url9 = '{url}&page={page}'.format(url=url, page=9)
-    pg_url10 = '{url}&page={page}'.format(url=url, page=10)
-
-
-
-    df = df.append(pd.read_html(pg_url1, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url2, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url3, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url4, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url5, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url6, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url7, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url8, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url9, header=0)[0], ignore_index=True)
-    df = df.append(pd.read_html(pg_url10, header=0)[0], ignore_index=True)
-
-
+    for page in range(1, 25):
+        pg_url = '{url}&page={page}'.format(url=url, page=page)
+        df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
 
     df = df.dropna()
 
@@ -481,7 +480,7 @@ def update_output3(value):
         showlegend=False),
         row=5, col=1)
 
-    fig.update_layout(title_text="차트 분석", height=800)
+    fig.update_layout(title_text=item_name + '보조지표', height=800)
     return fig
 
 
@@ -513,8 +512,8 @@ def update_output(value):
 
     # Designating Finance Date
     finance_date = annual_date + quarter_date
-    finance_date.insert(0, '연간 주요 재무정보')
-    finance_date.insert(5, '분기 주요 재무정보')
+    finance_date.insert(0, '연간 재무정보')
+    finance_date.insert(5, '분기 재무정보')
 
     # Designating Finance Index
     finance_index = [item.get_text().strip() for item in finance_html.select('th.h_th2')][3:14]
@@ -564,7 +563,7 @@ def update_output(value):
                    font=dict(color='white', size=12),
                    )))
 
-    fig.update_layout(title_text="차트 분석")
+    fig.update_layout(title_text=item_name + '연간 제무재표')
 
     fig.update_layout(
         updatemenus=[
@@ -581,12 +580,12 @@ def update_output(value):
                 buttons=list([
                     dict(label="연간",
                          method="update",
-                         args=[{"visible": [True, False]}, {'title': '연간 제무재표'}
+                         args=[{"visible": [True, False]}, {'title': item_name + '연간 제무재표'}
                                ]),
 
                     dict(label="분기",
                          method="update",
-                         args=[{"visible": [False, True]}, {'title': '분기 제무재표'}
+                         args=[{"visible": [False, True]}, {'title': item_name + '분기 제무재표'}
                                ]),
 
                 ]),
