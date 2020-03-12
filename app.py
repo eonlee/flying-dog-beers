@@ -14,10 +14,8 @@ import dash_bootstrap_components as dbc
 ########### Define your variables
 def get_codedf():
     url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
-    code_df = pd.read_html(url_main, header=0)[0]
-    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
-    code_df = code_df[['회사명', '종목코드']]
-    code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
+    code_df = pd.read_csv('assets/koreastock.csv', sep=',', encoding='CP949')
+    code_df.code = code_df.code.map('{:06d}'.format)
     return code_df
 
 
@@ -140,11 +138,7 @@ app.layout = dbc.Row(
     [Input('demo-dropdown', 'value')])
 def update_output2(value):
     # Importing Code from KRX
-    url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
-    code_df = pd.read_html(url_main, header=0)[0]
-    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
-    code_df = code_df[['회사명', '종목코드']]
-    code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
+    code_df = get_codedf()
 
     # Using Item name and code to get the right URL
     item_name = value
@@ -375,11 +369,8 @@ def update_output2(value):
     [Input('demo-dropdown', 'value')])
 def update_output3(value):
     # Importing Code from KRX
-    url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
-    code_df = pd.read_html(url_main, header=0)[0]
-    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
-    code_df = code_df[['회사명', '종목코드']]
-    code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
+    code_df = get_codedf()
+
 
     # Using Item name and code to get the right URL
     item_name = value
@@ -504,11 +495,7 @@ def update_output3(value):
     [Input('demo-dropdown', 'value')])
 def update_output(value):
     # Importing Code from KRX
-    url_main = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
-    code_df = pd.read_html(url_main, header=0)[0]
-    code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
-    code_df = code_df[['회사명', '종목코드']]
-    code_df = code_df.rename(columns={'회사명': 'name', '종목코드': 'code'})
+    code_df = get_codedf()
 
     # Using Item name and code to get the right URL
     item_name = value
